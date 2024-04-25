@@ -12,7 +12,7 @@ def main():
         pdf_path = generate_pdf(text_input)
 
         # Display download button for the generated PDF
-        download_button = st.download_button(label="Download PDF", data=open("output.pdf    ", "rb").read(), file_name="output.pdf")
+        download_button = st.download_button(label="Download PDF", data=open("output.pdf", "rb").read(), file_name="output.pdf")
         st.markdown(download_button, unsafe_allow_html=True)
 
 from googletrans import Translator
