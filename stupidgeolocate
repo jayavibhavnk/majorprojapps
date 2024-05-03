@@ -1,0 +1,33 @@
+import streamlit as st
+from geopy.geocoders import Nominatim
+
+# Function to get latitude and longitude coordinates for a location using Geopy
+def get_coordinates(location):
+    geolocator = Nominatim(user_agent="location-mapper")
+    location_info = geolocator.geocode(location)
+    if location_info:
+        return location_info.latitude, location_info.longitude
+    else:
+        return None
+
+# Main function to run the Streamlit app
+def main():
+    st.title("Location Mapper")
+
+    st.subheader("London")
+    london_coordinates = get_coordinates("London")
+    if london_coordinates:
+        st.write("Latitude:", london_coordinates[0])
+        st.write("Longitude:", london_coordinates[1])
+        st.map({ "lat": [london_coordinates[0]], "lon": [london_coordinates[1]] })
+
+    st.subheader("Seoul")
+    seoul_coordinates = get_coordinates("Seoul")
+    if seoul_coordinates:
+        st.write("Latitude:", seoul_coordinates[0])
+        st.write("Longitude:", seoul_coordinates[1])
+        st.map({ "lat": [seoul_coordinates[0]], "lon": [seoul_coordinates[1]] })
+
+# Run the Streamlit app
+if __name__ == "__main__":
+    main()
