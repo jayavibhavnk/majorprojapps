@@ -1,0 +1,26 @@
+import streamlit as st
+import pandas as pd
+
+# Sample data: coordinates of cities
+cities = {
+    "City": ["New York City", "Los Angeles", "Chicago", "Houston", "Phoenix"],
+    "Latitude": [40.7128, 34.0522, 41.8781, 29.7604, 33.4484],
+    "Longitude": [-74.0060, -118.2437, -87.6298, -95.3698, -112.0740]
+}
+
+# Convert the dictionary to a DataFrame
+df = pd.DataFrame(cities)
+
+# Rename columns to 'lat' and 'lon'
+df.rename(columns={"Latitude": "lat", "Longitude": "lon"}, inplace=True)
+
+# Main function to run the Streamlit app
+def main():
+    st.title("Interactive Map Example")
+
+    # Display the map with the coordinates of cities
+    st.map(df)
+
+# Run the Streamlit app
+if __name__ == "__main__":
+    main()
