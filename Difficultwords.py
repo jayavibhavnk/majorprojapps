@@ -60,6 +60,27 @@ def main():
         # Display video
         st_player(video_url, controls=True)
 
+        # Display subtitles dynamically
+        subtitle_placeholder = st.empty()
+        translated_placeholder = st.empty()
+
+        if st.button("Show Transcripts"):
+            try:
+                transcript_en, _ = fetch_youtube_transcript(video_id, 'en')
+                transcript_target, _ = fetch_youtube_transcript(video_id, target_language)
+
+                if transcript_en and transcript_target:
+                    for i in range(len(transcript_en)):
+                        original_subtitle = transcript_en[i]['text']
+                        translated_subtitle = transcript_target[i]['text']
+                        subtitle_placeholder.markdown(f"**Original (EN):** {original_subtitle}")
+                        translated_placeholder.markdown(f"**Translated ({LANGUAGES[target_language]}):** {translated_subtitle}")
+                        time.sleep(transcript_en[i]["duration"])
+                        subtitle_placeholder.empty()
+                        translated_placeholder.empty()
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+
         # Fetch and display transcripts
         if st.button('Fetch Transcript'):
             transcript, text = fetch_youtube_transcript(video_id, 'en')
@@ -74,27 +95,6 @@ def main():
                         st.write(word)
                 else:
                     st.write('No difficult words found.')
-                
-                # Display subtitles dynamically
-                subtitle_placeholder = st.empty()
-                translated_placeholder = st.empty()
-
-                if st.button("Show Transcripts"):
-                    try:
-                        transcript_en, _ = fetch_youtube_transcript(video_id, 'en')
-                        transcript_target, _ = fetch_youtube_transcript(video_id, target_language)
-
-                        if transcript_en and transcript_target:
-                            for i in range(len(transcript_en)):
-                                original_subtitle = transcript_en[i]['text']
-                                translated_subtitle = transcript_target[i]['text']
-                                subtitle_placeholder.markdown(f"**Original (EN):** {original_subtitle}")
-                                translated_placeholder.markdown(f"**Translated ({LANGUAGES[target_language]}):** {translated_subtitle}")
-                                time.sleep(transcript_en[i]["duration"])
-                                subtitle_placeholder.empty()
-                                translated_placeholder.empty()
-                    except Exception as e:
-                        st.error(f"An error occurred: {e}")
             else:
                 st.error('Failed to fetch transcript. Please check the video ID.')
 
