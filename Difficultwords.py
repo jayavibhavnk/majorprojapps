@@ -101,7 +101,7 @@ def main():
                 st.text_area('Transcript:', value=text, height=200)
                 text = preprocess_text(text)
                 difficult_words = find_difficult_words(text)
-                yoyo = query_ai("give me a summary of the youtube transcript: " + text + " You also have to give information about the tough words in the passage, explain whatever words you feel are difficult to underestand with respect to the context, tough words: " + ",".join(difficult_words))
+                yoyo = query_openai("give me a summary of the youtube transcript: " + text + " You also have to give information about the tough words in the passage, explain whatever words you feel are difficult to underestand with respect to the context, tough words: " + ",".join(difficult_words))
                 # if difficult_words:
                 #     st.write('Difficult words found:')
                 #     for word in difficult_words:
