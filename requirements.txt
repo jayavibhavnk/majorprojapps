@@ -1,3 +1,4 @@
 googletrans==4.0.0-rc1 
 reportlab
 youtube_transcript_api
+streamlit_player
