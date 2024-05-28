@@ -4,19 +4,19 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from streamlit_player import st_player
 import requests
 import re
-from openai import OpenAI
+# from openai import OpenAI
 
-def query_openai(query):
-        client = OpenAI()
-        completion = client.chat.completions.create(
-        model="gpt-3.5-turbo-0125",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant"},
-            {"role": "user", "content": query}
-        ],
-        n = 1
-        )
-        return(completion.choices[0].message.content)
+# def query_openai(query):
+#         client = OpenAI()
+#         completion = client.chat.completions.create(
+#         model="gpt-3.5-turbo-0125",
+#         messages=[
+#             {"role": "system", "content": "You are a helpful assistant"},
+#             {"role": "user", "content": query}
+#         ],
+#         n = 1
+#         )
+#         return(completion.choices[0].message.content)
 
 # List of languages for selection
 LANGUAGES = {
@@ -102,15 +102,15 @@ def main():
                 st.text_area('Transcript:', value=text, height=200)
                 text = preprocess_text(text)
                 difficult_words = find_difficult_words(text)
-                yoyo = query_openai("give me a summary of the youtube transcript: " + text + " You also have to give information about the tough words in the passage, explain whatever words you feel are difficult to underestand with respect to the context, tough words: " + ",".join(difficult_words))
-                # if difficult_words:
-                #     st.write('Difficult words found:')
-                #     for word in difficult_words:
-                #         st.write(word)
-                # else:
-                #     st.write('No difficult words found.')
-                if yoyo:
-                    st.write(yoyo)
+                # yoyo = query_openai("give me a summary of the youtube transcript: " + text + " You also have to give information about the tough words in the passage, explain whatever words you feel are difficult to underestand with respect to the context, tough words: " + ",".join(difficult_words))
+                if difficult_words:
+                    st.write('Difficult words found:')
+                    for word in difficult_words:
+                        st.write(word)
+                else:
+                    st.write('No difficult words found.')
+                # if yoyo:
+                #     st.write(yoyo)
             else:
                 st.error('Failed to fetch transcript. Please check the video ID.')
 
