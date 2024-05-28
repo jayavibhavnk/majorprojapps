@@ -4,6 +4,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from streamlit_player import st_player
 import requests
 import re
+from openai import OpenAI
 
 def query_openai(query):
         client = OpenAI()
