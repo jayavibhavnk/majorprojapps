@@ -38,7 +38,7 @@ def main():
 
     # User inputs
     video_url = st.text_input("Enter a YouTube video URL:")
-    target_language = st.selectbox('Select target language for translation:', ('en', 'de'))
+    target_language = st.selectbox('Select target language for translation:', ('en', 'kn'))
 
     if video_url:
         video_id = video_url.split("v=")[-1]
