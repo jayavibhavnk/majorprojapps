@@ -5,6 +5,20 @@ from streamlit_player import st_player
 import requests
 import re
 
+# List of languages for selection
+LANGUAGES = {
+    "en": "English",
+    "de": "German",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "fr": "French",
+    "ja": "Japanese",
+    "hi": "Hindi",
+    "ar": "Arabic",
+    "zh": "Chinese"
+}
+
 # Fetching common English words from GitHub
 english_most_common_10k = 'https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-usa-no-swears.txt'
 response = requests.get(english_most_common_10k)
@@ -38,19 +52,7 @@ def main():
 
     # User inputs
     video_url = st.text_input("Enter a YouTube video URL:")
-    languages = {
-        "en": "English",
-        "de": "German",
-        "es": "Spanish",
-        "pt": "Portuguese",
-        "ru": "Russian",
-        "fr": "French",
-        "ja": "Japanese",
-        "hi": "Hindi",
-        "ar": "Arabic",
-        "zh": "Chinese"
-    }
-    target_language = st.selectbox('Select target language for translation:', list(languages.keys()), format_func=lambda x: languages[x])
+    target_language = st.selectbox('Select target language for translation:', list(LANGUAGES.keys()), format_func=lambda x: LANGUAGES[x])
 
     if video_url:
         video_id = video_url.split("v=")[-1]
@@ -72,29 +74,29 @@ def main():
                         st.write(word)
                 else:
                     st.write('No difficult words found.')
+                
+                # Display subtitles dynamically
+                subtitle_placeholder = st.empty()
+                translated_placeholder = st.empty()
+
+                if st.button("Show Transcripts"):
+                    try:
+                        transcript_en, _ = fetch_youtube_transcript(video_id, 'en')
+                        transcript_target, _ = fetch_youtube_transcript(video_id, target_language)
+
+                        if transcript_en and transcript_target:
+                            for i in range(len(transcript_en)):
+                                original_subtitle = transcript_en[i]['text']
+                                translated_subtitle = transcript_target[i]['text']
+                                subtitle_placeholder.markdown(f"**Original (EN):** {original_subtitle}")
+                                translated_placeholder.markdown(f"**Translated ({LANGUAGES[target_language]}):** {translated_subtitle}")
+                                time.sleep(transcript_en[i]["duration"])
+                                subtitle_placeholder.empty()
+                                translated_placeholder.empty()
+                    except Exception as e:
+                        st.error(f"An error occurred: {e}")
             else:
                 st.error('Failed to fetch transcript. Please check the video ID.')
-
-        # Display subtitles dynamically
-        subtitle_placeholder = st.empty()
-        translated_placeholder = st.empty()
-
-        if st.button("Show Transcripts"):
-            try:
-                transcript_en, _ = fetch_youtube_transcript(video_id, 'en')
-                transcript_target, _ = fetch_youtube_transcript(video_id, target_language)
-
-                if transcript_en and transcript_target:
-                    for i in range(len(transcript_en)):
-                        original_subtitle = transcript_en[i]['text']
-                        translated_subtitle = transcript_target[i]['text']
-                        subtitle_placeholder.markdown(f"**Original (EN):** {original_subtitle}")
-                        translated_placeholder.markdown(f"**Translated ({languages[target_language]}):** {translated_subtitle}")
-                        time.sleep(transcript_en[i]["duration"])
-                        subtitle_placeholder.empty()
-                        translated_placeholder.empty()
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
