@@ -38,10 +38,25 @@ def main():
 
     # User inputs
     video_url = st.text_input("Enter a YouTube video URL:")
-    target_language = st.selectbox('Select target language for translation:', ('en', 'kn'))
+    languages = {
+        "en": "English",
+        "de": "German",
+        "es": "Spanish",
+        "pt": "Portuguese",
+        "ru": "Russian",
+        "fr": "French",
+        "ja": "Japanese",
+        "hi": "Hindi",
+        "ar": "Arabic",
+        "zh": "Chinese"
+    }
+    target_language = st.selectbox('Select target language for translation:', list(languages.keys()), format_func=lambda x: languages[x])
 
     if video_url:
         video_id = video_url.split("v=")[-1]
+
+        # Display video
+        st_player(video_url, controls=True)
 
         # Fetch and display transcripts
         if st.button('Fetch Transcript'):
@@ -60,9 +75,6 @@ def main():
             else:
                 st.error('Failed to fetch transcript. Please check the video ID.')
 
-        # Display video
-        st_player(video_url, controls=True)
-
         # Display subtitles dynamically
         subtitle_placeholder = st.empty()
         translated_placeholder = st.empty()
@@ -77,7 +89,7 @@ def main():
                         original_subtitle = transcript_en[i]['text']
                         translated_subtitle = transcript_target[i]['text']
                         subtitle_placeholder.markdown(f"**Original (EN):** {original_subtitle}")
-                        translated_placeholder.markdown(f"**Translated ({target_language.upper()}):** {translated_subtitle}")
+                        translated_placeholder.markdown(f"**Translated ({languages[target_language]}):** {translated_subtitle}")
                         time.sleep(transcript_en[i]["duration"])
                         subtitle_placeholder.empty()
                         translated_placeholder.empty()
